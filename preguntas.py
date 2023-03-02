@@ -12,6 +12,13 @@ Utilice el archivo `data.csv` para resolver las preguntas.
 
 """
 
+import csv
+import functools
+
+with open('data.csv', 'r') as data_file:
+    data_reader = csv.reader(data_file, delimiter='\t')
+    data = [data for data in data_reader]
+
 
 def pregunta_01():
     """
@@ -21,7 +28,7 @@ def pregunta_01():
     214
 
     """
-    return
+    return sum(map(lambda x: int(x[1]), data))
 
 
 def pregunta_02():
@@ -39,7 +46,11 @@ def pregunta_02():
     ]
 
     """
-    return
+    counter: dict = {}
+    for row in data:
+        counter[row[0]] = 1 if row[0] not in counter else counter[row[0]] + 1
+
+    return sorted(counter.items(), key=lambda x: x[0])
 
 
 def pregunta_03():
@@ -57,7 +68,11 @@ def pregunta_03():
     ]
 
     """
-    return
+    counter: dict = {}
+    for row in data:
+        counter[row[0]] = int(row[1]) if row[0] not in counter else counter[row[0]] + int(row[1])
+
+    return sorted(counter.items(), key=lambda x: x[0])
 
 
 def pregunta_04():
@@ -82,7 +97,12 @@ def pregunta_04():
     ]
 
     """
-    return
+    counter: dict = {}
+    for row in data:
+        month = row[2].split("-")[1]
+        counter[month] = 1 if month not in counter else counter[month] + 1
+
+    return sorted(counter.items(), key=lambda x: x[0])
 
 
 def pregunta_05():
@@ -100,7 +120,13 @@ def pregunta_05():
     ]
 
     """
-    return
+    counter: dict = {}
+
+    for row in data:
+        key = row[0]
+        counter[key] = [int(row[1])] if key not in counter else counter[key] + [int(row[1])]
+
+    return sorted(map(lambda x: (x[0], max(x[1]), min(x[1])), counter.items()), key=lambda x: x[0])
 
 
 def pregunta_06():
@@ -125,7 +151,16 @@ def pregunta_06():
     ]
 
     """
-    return
+    counter: dict = {}
+
+    for row in data:
+        dicts = row[4].split(',')
+
+        for entry in dicts:
+            key, value = entry.split(':')
+            counter[key] = [int(value)] if key not in counter else counter[key] + [int(value)]
+
+    return sorted(map(lambda x: (x[0], min(x[1]), max(x[1])), counter.items()), key=lambda x: x[0])
 
 
 def pregunta_07():
@@ -149,7 +184,13 @@ def pregunta_07():
     ]
 
     """
-    return
+    counter: dict = {}
+
+    for row in data:
+        key, value = int(row[1]), row[0]
+        counter[key] = [value] if key not in counter else counter[key] + [value]
+
+    return sorted(counter.items())
 
 
 def pregunta_08():
@@ -174,8 +215,13 @@ def pregunta_08():
     ]
 
     """
-    return
+    counter: dict = {}
 
+    for row in data:
+        key, value = int(row[1]), row[0]
+        counter[key] = [value] if key not in counter else counter[key] + [value]
+
+    return sorted(map(lambda x: (x[0], sorted(set(x[1]))), counter.items()))
 
 def pregunta_09():
     """
@@ -197,7 +243,16 @@ def pregunta_09():
     }
 
     """
-    return
+    counter: dict = {}
+
+    for row in data:
+        dicts = row[4].split(',')
+
+        for entry in dicts:
+            key, value = entry.split(':')
+            counter[key] = 1 if key not in counter else counter[key] + 1
+
+    return counter
 
 
 def pregunta_10():
@@ -218,7 +273,7 @@ def pregunta_10():
 
 
     """
-    return
+    return list(map(lambda x: (x[0], len(x[3].split(',')), len(x[4].split(','))), data))
 
 
 def pregunta_11():
@@ -239,7 +294,16 @@ def pregunta_11():
 
 
     """
-    return
+    counter: dict = {}
+
+    for row in data:
+        keys = row[3].split(',')
+        value = int(row[1])
+
+        for key in keys:
+            counter[key] = value if key not in counter else counter[key] + value
+
+    return counter
 
 
 def pregunta_12():
@@ -257,4 +321,12 @@ def pregunta_12():
     }
 
     """
-    return
+    counter: dict = {}
+
+    for row in data:
+        key = row[0]
+        value = sum(map(lambda x: int(x.split(':')[1]), row[4].split(',')))
+
+        counter[key] = value if key not in counter else counter[key] + value
+
+    return counter
